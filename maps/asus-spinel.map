@@ -1,3 +1,9 @@
+#
+# Manufacturer : PHILIPS
+# Product name : MCE USB IR Receiver- Spinel plusf0r ASUS
+#
+# Map provided by Thibault Kummer <bob@couldsource.net>
+#
 010000520000000000:KEY_UP
 010000510000000000:KEY_DOWN
 010000500000000000:KEY_LEFT

@@ -1,0 +1,72 @@
+This README is based on http://forum.xbmc.org/showthread.php?tid=88560
+
+Build hid_mapper:
+=================
+
+    cd /path/to/hid_mapper
+    ./make
+
+List recognized devices:
+========================
+
+    ./hid_mapper --list-devices
+
+If necessary, blacklist the device in Xorg so it does not conflict with the 
+mapper. Create a new file in /usr/share/X11/xorg.conf.d/. For example
+`50-remote.conf` containing:
+
+    Section "InputClass"
+    Identifier "Remote blacklist"
+    MatchProduct "PHILIPS MCE USB IR Receiver- Spinel plusf0r ASUS"
+    Option "Ignore" "on"
+    EndSection
+
+Capture HID events:
+===================
+
+    ./hid_mapper --learn \
+                 --manufacturer 'PHILIPS' \
+                 --product 'MCE USB IR Receiver- Spinel plusf0r ASUS' \
+                 --map ''
+
+This will log events recieved while pressing buttons on the remote.
+
+As an example, pressing "OK" on the Philips MCE USB IR Receiver will
+produce:
+
+    Found HID device at /dev/hidraw0
+    01 00 00 28 00 00 00 00 00
+    01 00 00 00 00 00 00 00 00
+
+The first event (line `01 00 00 28 00 00 00 00 00`) is the _key down_ event
+corresponding to the pressed button.
+
+Based on the info gathered by pressing the various buttons of your remote, and
+using keys defined in `/usr/include/linux/input.h`, write (yourself!) a
+map file consisting of <key code>:<key symbol> pairs:
+
+    010000280000000000:KEY_ENTER
+    030000000000020000:KEY_KP1
+    030000000000040000:KEY_KP2
+    030000000020000000:KEY_C
+    030000000000008000:KEY_TAB
+
+(see the maps/ directory for user contributed examples)
+
+Run the mapper:
+===============
+
+The final step is to actually run the mapper:
+
+    ./hid_mapper \
+                 --manufacturer 'PHILIPS' \
+                 --product 'MCE USB IR Receiver- Spinel plusf0r ASUS' \
+                 --map 'maps/asus-spinel.map'
+
+At this point the remote should work and emit the keys specified in the map 
+file.
+
+Since the hidraw driver is generic, this mapper should work with any HID 
+receiver, even if it is not a remote. HID is used for keyboard, mouses, 
+joysticks...
+

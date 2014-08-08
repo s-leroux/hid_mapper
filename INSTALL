@@ -1,0 +1,5 @@
+Build hid_mapper in the source directory:
+
+    ./make
+
+See REAME for usage
