@@ -15,6 +15,7 @@
  * along with hid_mapper. If not, see <http://www.gnu.org/licenses/>.
  * 
  * Author: Thibault Kummer <bob@coldsource.net>
+ *         Sylvain Leroux <sylvain@chicoree.fr>
  */
 
 #include <MapReader.h>
@@ -57,11 +58,15 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 			ptr = buf;
 			
 			// Skip spaces if any
-			while(ptr[0]==' ')
+			while(isspace(ptr[0]))
 				ptr++;
-			
-			if(ptr[0]=='#' || ptr[0]=='\n')
+		
+			// isspace has eaten the '\n'	
+			if(ptr[0]=='#' || ptr[0]==0)
+			{
+				++line;
 				continue; // Skip comments
+			}
 			
 			// Read hexadecimal event description
 			i = 0;
@@ -81,7 +86,7 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 			event_length = i;
 			
 			// Skip spaces if any
-			while(ptr[0]==' ')
+			while(isspace(ptr[0]))
 				ptr++;
 			
 			if(ptr[0]!=':')
@@ -93,11 +98,12 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 			ptr++;
 			
 			// Skip spaces if any
-			while(ptr[0]==' ')
+			while(isspace(ptr[0]))
 				ptr++;
 			
 			i = 0;
-			while(i<KEY_NAME_MAXLENGTH && ptr[i]!='\0' && ptr[i]!='\n' && ptr[i]!=' ')
+
+			while(i<KEY_NAME_MAXLENGTH && ptr[i]!='\0' && ptr[i]!='\n' && (!isspace(ptr[i])))
 				key_name[i] = ptr[i++];
 			
 			if(i==KEY_NAME_MAXLENGTH)
@@ -111,12 +117,17 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 			ptr += i;
 			
 			// Skip spaces if any
-			while(ptr[0]==' ')
+			while(isspace(ptr[0]))
 				ptr++;
 			
-			if(ptr[0]!='\n' && ptr[0]!='\0' && ptr[0]!='#')
+			// ??? For some reason GCC 4.7.2-5 (Debian Wheezy) does
+			// ??? not compile properly the following statement
+			// ??? if written: 
+			// ???   if ((ptr[0]!='\n') && (ptr[0]!='\0') && (ptr[0]!='#'))
+			// ??? (or am I completly stupid?)
+			if (ptr[0]!='\n') if (ptr[0]!='\0') if (ptr[0]!='#')
 			{
-				sprintf(error,"Garbage at end of line %d",line);
+				sprintf(error,"Garbage at end of line %d: %s",line,ptr);
 				throw Exception("MapReader",error);
 			}
 			
