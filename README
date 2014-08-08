@@ -26,8 +26,7 @@ Capture HID events:
 
     ./hid_mapper --learn \
                  --manufacturer 'PHILIPS' \
-                 --product 'MCE USB IR Receiver- Spinel plusf0r ASUS' \
-                 --map ''
+                 --product 'MCE USB IR Receiver- Spinel plusf0r ASUS'
 
 This will log events recieved while pressing buttons on the remote.
 
