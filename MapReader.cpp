@@ -39,7 +39,7 @@ static int hex_to_int(char c)
 void MapReader::LoadMap(const char *filename,EventMapping *map)
 {
 	FILE *f = 0;
-	int i,event_length,line,key;
+	int i,event_length,event_type,line,key;
 	char buf[MAP_LINE_MAXLENGTH],event[EVENT_MAXLENGTH],mask[EVENT_MAXLENGTH],key_name[KEY_NAME_MAXLENGTH+1],error[256];
 	char *ptr;
 	
@@ -120,14 +120,29 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 				throw Exception("MapReader",error);
 			}
 			
-			key = Keys::Lookup(key_name);
-			if(key<0)
+			if(strncmp(key_name,"CORE::",6)==0)
 			{
-				sprintf(error,"Unknown key name at line %d",line);
-				throw Exception("MapReader",error);
+				event_type = EVENT_TYPE_CORE;
+				if(strcmp(key_name+6,"LAST_KEY")==0)
+					key = EVENT_CORE_LAST_KEY;
+				else
+				{
+					sprintf(error,"Unknown core event name at line %d",line);
+					throw Exception("MapReader",error);
+				}
+			}
+			else
+			{
+				event_type = EVENT_TYPE_KEYBOARD;
+				key = Keys::Lookup(key_name);
+				if(key<0)
+				{
+					sprintf(error,"Unknown key name at line %d",line);
+					throw Exception("MapReader",error);
+				}
 			}
 			
-			map->AddEvent(EVENT_TYPE_KEYBOARD,event,mask,event_length,key);
+			map->AddEvent(event_type,event,mask,event_length,key);
 			
 			line++;
 		}

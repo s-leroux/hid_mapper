@@ -49,7 +49,7 @@ static void print_usage(void)
 {
 	printf("Usage :\n");
 	printf("  hid_mapper --list-devices [ --lookup-id ]\n");
-	printf("  hid_mapper [ --lookup-id ] --manufacturer <manufacturer> --product <product name> [ --map <map file>] [ --map-mouse <map file> ]\n");
+	printf("  hid_mapper [ --lookup-id ] [ --disable-repetition ] --manufacturer <manufacturer> --product <product name> [ --map <map file>] [ --map-mouse <map file> ]\n");
 	printf("  hid_mapper [ --lookup-id ] --learn --manufacturer <manufacturer> --product <product name>\n");
 }
 
@@ -59,6 +59,8 @@ int main(int argc,char **argv)
 	const char *map_filename = 0,*map_mouse_filename = 0;
 	int mode = MODE_MAP;
 	int lookup_mode = LOOKUP_MODE_NAME;
+	int wait = -1;
+	bool disable_repetition = false;
 	
 	// Check we are root
 	uid_t uid;
@@ -96,8 +98,10 @@ int main(int argc,char **argv)
 		{
 			if(strcmp(argv[i],"--learn")==0)
 				mode = MODE_LEARN;
-			if(strcmp(argv[i],"--lookup-id")==0)
+			else if(strcmp(argv[i],"--lookup-id")==0)
 				lookup_mode = LOOKUP_MODE_ID;
+			else if(strcmp(argv[i],"--disable-repetition")==0)
+				disable_repetition = true;
 		}
 		
 		for(int i=1;i<argc-1;i++)
@@ -122,6 +126,11 @@ int main(int argc,char **argv)
 				map_mouse_filename = argv[i+1];
 				i++;
 			}
+			else if(strcmp(argv[i],"--wait-device")==0)
+			{
+				wait = atoi(argv[i+1]);
+				i++;
+			}
 		}
 	}
 	
@@ -132,6 +141,12 @@ int main(int argc,char **argv)
 	}
 	
 	if(mode==MODE_MAP && map_filename==0 && map_mouse_filename==0)
+	{
+		print_usage();
+		return -1;
+	}
+	
+	if(wait==0)
 	{
 		print_usage();
 		return -1;
@@ -178,11 +193,34 @@ int main(int argc,char **argv)
 	// Lookup for specified HID device
 	int re,max_hid_fd;
 	
-	re = lookup_hid_product(lookup_mode,manufacturer,product,&hid_device);
+	if(wait>0)
+		printf("Waiting device for %d second(s)\n",wait);
+	
+	while(true)
+	{
+		re = lookup_hid_product(lookup_mode,manufacturer,product,&hid_device);
+		
+		if(re>=0 || wait<=0)
+			break;
+		
+		wait--;
+		sleep(1);
+	}
+	
 	if(re<0)
 	{
 		fprintf(stderr,"Unable to find specified HID device\n");
 		return EXIT_FAILURE;
+	}
+		
+	if(wait!=-1)
+	{
+		re = lookup_hid_product(lookup_mode,manufacturer,product,&hid_device);
+	}
+	else
+	{
+		re = lookup_hid_product(lookup_mode,manufacturer,product,&hid_device);
+		
 	}
 	
 	printf("Found HID device\n");
@@ -213,7 +251,7 @@ int main(int argc,char **argv)
 	const event_mapping *event_map;
 	unsigned int event_length;
 	char event[EVENT_MAXLENGTH];
-	int last_key_down = 0;
+	int last_key_down = 0, last_key_code = 0;
 	
 	while(1)
 	{
@@ -225,7 +263,7 @@ int main(int argc,char **argv)
 			continue;
 		}
 		
-			if(mode==MODE_LEARN)
+		if(mode==MODE_LEARN)
 		{
 			for(int i=0;i<event_length;i++)
 				printf("%02x ",(unsigned char)event[i]);
@@ -248,7 +286,11 @@ int main(int argc,char **argv)
 					{
 						case EVENT_TYPE_KEYBOARD:
 							send_key_down_event(uinput_fd,event_map->value);
-							last_key_down = event_map->value;
+							last_key_code = event_map->value;
+							if(disable_repetition)
+								send_key_up_event(uinput_fd,last_key_code);
+							else
+								last_key_down = last_key_code;
 							break;
 						
 						case EVENT_TYPE_MOUSE_X:
@@ -257,6 +299,23 @@ int main(int argc,char **argv)
 						
 						case EVENT_TYPE_MOUSE_Y:
 							send_mouse_Y_event(uinput_fd,event_map->value);
+							break;
+						
+						case EVENT_TYPE_CORE:
+							switch(event_map->value)
+							{
+								case EVENT_CORE_LAST_KEY:
+									if(!last_key_code)
+										break;
+									
+									send_key_down_event(uinput_fd,last_key_code);
+									if(disable_repetition)
+										send_key_up_event(uinput_fd,last_key_code);
+									else
+										last_key_down = last_key_code;
+									
+									break;
+							}
 							break;
 					}
 				}

@@ -22,6 +22,15 @@
 #include <linux/input.h>
 
 const char *keys_char[] = {
+#ifdef BTN_LEFT
+	"BTN_LEFT",
+#endif
+#ifdef BTN_MIDDLE
+	"BTN_MIDDLE",
+#endif
+#ifdef BTN_RIGHT
+	"BTN_RIGHT",
+#endif
 #ifdef KEY_0
 	"KEY_0",
 #endif
@@ -115,14 +124,14 @@ const char *keys_char[] = {
 #ifdef KEY_BREAK
 	"KEY_BREAK",
 #endif
-#ifdef KEY_BRIGHTNESS_CYCLE
-	"KEY_BRIGHTNESS_CYCLE",
-#endif
 #ifdef KEY_BRIGHTNESSDOWN
 	"KEY_BRIGHTNESSDOWN",
 #endif
 #ifdef KEY_BRIGHTNESSUP
 	"KEY_BRIGHTNESSUP",
+#endif
+#ifdef KEY_BRIGHTNESS_CYCLE
+	"KEY_BRIGHTNESS_CYCLE",
 #endif
 #ifdef KEY_BRIGHTNESS_ZERO
 	"KEY_BRIGHTNESS_ZERO",
@@ -241,17 +250,17 @@ const char *keys_char[] = {
 #ifdef KEY_DATABASE
 	"KEY_DATABASE",
 #endif
-#ifdef KEY_DEL_EOL
-	"KEY_DEL_EOL",
-#endif
-#ifdef KEY_DEL_EOS
-	"KEY_DEL_EOS",
-#endif
 #ifdef KEY_DELETE
 	"KEY_DELETE",
 #endif
 #ifdef KEY_DELETEFILE
 	"KEY_DELETEFILE",
+#endif
+#ifdef KEY_DEL_EOL
+	"KEY_DEL_EOL",
+#endif
+#ifdef KEY_DEL_EOS
+	"KEY_DEL_EOS",
 #endif
 #ifdef KEY_DEL_LINE
 	"KEY_DEL_LINE",
@@ -265,11 +274,11 @@ const char *keys_char[] = {
 #ifdef KEY_DIRECTORY
 	"KEY_DIRECTORY",
 #endif
-#ifdef KEY_DISPLAY_OFF
-	"KEY_DISPLAY_OFF",
-#endif
 #ifdef KEY_DISPLAYTOGGLE
 	"KEY_DISPLAYTOGGLE",
+#endif
+#ifdef KEY_DISPLAY_OFF
+	"KEY_DISPLAY_OFF",
 #endif
 #ifdef KEY_DOCUMENTS
 	"KEY_DOCUMENTS",
@@ -1168,6 +1177,15 @@ const char *keys_char[] = {
 };
 
 const int keys_int[] = {
+#ifdef BTN_LEFT
+	BTN_LEFT,
+#endif
+#ifdef BTN_MIDDLE
+	BTN_MIDDLE,
+#endif
+#ifdef BTN_RIGHT
+	BTN_RIGHT,
+#endif
 #ifdef KEY_0
 	KEY_0,
 #endif
@@ -1261,14 +1279,14 @@ const int keys_int[] = {
 #ifdef KEY_BREAK
 	KEY_BREAK,
 #endif
-#ifdef KEY_BRIGHTNESS_CYCLE
-	KEY_BRIGHTNESS_CYCLE,
-#endif
 #ifdef KEY_BRIGHTNESSDOWN
 	KEY_BRIGHTNESSDOWN,
 #endif
 #ifdef KEY_BRIGHTNESSUP
 	KEY_BRIGHTNESSUP,
+#endif
+#ifdef KEY_BRIGHTNESS_CYCLE
+	KEY_BRIGHTNESS_CYCLE,
 #endif
 #ifdef KEY_BRIGHTNESS_ZERO
 	KEY_BRIGHTNESS_ZERO,
@@ -1387,17 +1405,17 @@ const int keys_int[] = {
 #ifdef KEY_DATABASE
 	KEY_DATABASE,
 #endif
-#ifdef KEY_DEL_EOL
-	KEY_DEL_EOL,
-#endif
-#ifdef KEY_DEL_EOS
-	KEY_DEL_EOS,
-#endif
 #ifdef KEY_DELETE
 	KEY_DELETE,
 #endif
 #ifdef KEY_DELETEFILE
 	KEY_DELETEFILE,
+#endif
+#ifdef KEY_DEL_EOL
+	KEY_DEL_EOL,
+#endif
+#ifdef KEY_DEL_EOS
+	KEY_DEL_EOS,
 #endif
 #ifdef KEY_DEL_LINE
 	KEY_DEL_LINE,
@@ -1411,11 +1429,11 @@ const int keys_int[] = {
 #ifdef KEY_DIRECTORY
 	KEY_DIRECTORY,
 #endif
-#ifdef KEY_DISPLAY_OFF
-	KEY_DISPLAY_OFF,
-#endif
 #ifdef KEY_DISPLAYTOGGLE
 	KEY_DISPLAYTOGGLE,
+#endif
+#ifdef KEY_DISPLAY_OFF
+	KEY_DISPLAY_OFF,
 #endif
 #ifdef KEY_DOCUMENTS
 	KEY_DOCUMENTS,

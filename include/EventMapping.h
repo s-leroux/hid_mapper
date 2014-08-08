@@ -23,6 +23,9 @@
 #define EVENT_TYPE_KEYBOARD              0x01
 #define EVENT_TYPE_MOUSE_X               0x02
 #define EVENT_TYPE_MOUSE_Y               0x03
+#define EVENT_TYPE_CORE                  0x04
+
+#define EVENT_CORE_LAST_KEY              0x01
 
 #include <config.h>
 #include <LinkedList.h>
