@@ -15,6 +15,7 @@
  * along with hid_mapper. If not, see <http://www.gnu.org/licenses/>.
  * 
  * Author: Thibault Kummer <bob@coldsource.net>
+ *         Sylvain Leroux <sylvain@chicoree.fr>
  */
 
 extern "C"
@@ -155,7 +156,7 @@ int main(int argc,char **argv)
 	// Load map file
 	EventMapping *map = new EventMapping();
 	
-	if(mode==MODE_MAP)
+	if((mode==MODE_MAP)||(mode==MODE_LEARN))
 	{
 		if(map_filename!=0)
 		{
@@ -170,7 +171,7 @@ int main(int argc,char **argv)
 				return EXIT_FAILURE;
 			}
 			
-			printf("Loaded map file %s\n",map_filename);
+			fprintf(stderr,"Loaded map file %s\n",map_filename);
 		}
 		
 		if(map_mouse_filename!=0)
@@ -186,7 +187,7 @@ int main(int argc,char **argv)
 				return EXIT_FAILURE;
 			}
 			
-			printf("Loaded mouse map file %s\n",map_mouse_filename);
+			fprintf(stderr,"Loaded mouse map file %s\n",map_mouse_filename);
 		}
 	}
 	
@@ -194,7 +195,7 @@ int main(int argc,char **argv)
 	int re,max_hid_fd;
 	
 	if(wait>0)
-		printf("Waiting device for %d second(s)\n",wait);
+		fprintf(stderr,"Waiting device for %d second(s)\n",wait);
 	
 	while(true)
 	{
@@ -223,7 +224,7 @@ int main(int argc,char **argv)
 		
 	}
 	
-	printf("Found HID device\n");
+	fprintf(stderr,"Found HID device\n");
 	
 	// HID
 	re = open_hid_device(&hid_device);
@@ -243,18 +244,37 @@ int main(int argc,char **argv)
 			return EXIT_FAILURE;
 		}
 		
-		printf("Generic USB mapper driver setup\n");
+		fprintf(stderr,"Generic USB mapper driver setup\n");
 	}
 	
 	
 	LinkedList<event_mapping> *event_map_list;
-	const event_mapping *event_map;
+	const event_mapping *event_map = NULL;
 	unsigned int event_length;
 	char event[EVENT_MAXLENGTH];
 	int last_key_down = 0, last_key_code = 0;
+	unsigned int count = 0;
+
+	// otput "standard" header when learning new map
+	if((mode==MODE_LEARN) && (map_filename))
+	{
+		printf("#\n");
+		printf("# manufacturer : %s\n", manufacturer);
+		printf("# product : %s\n", product);
+		printf("#\n");
+	}
 	
 	while(1)
 	{
+		// assume two events per key pressed (down & up)
+		if((mode==MODE_LEARN) && (map_filename) && (!(count&1)))
+		{
+			event_map = map->EnumEvent();
+			if (!event_map)
+				break;
+			if ((event_map->length ==1))//&&(event_map->event[0]==0))
+				fprintf(stderr, "%d, Press %s(%d)\n",event_map->length,Keys::ReverseLookup(event_map->value),event_map->value);
+		}
 		event_length = EVENT_MAXLENGTH;
 		re = read_hid_event(&hid_device,event,&event_length);
 		if(re<0)
@@ -262,12 +282,25 @@ int main(int argc,char **argv)
 			fprintf(stderr,"Error reading HID event\n");
 			continue;
 		}
+		++count;
 		
 		if(mode==MODE_LEARN)
 		{
-			for(int i=0;i<event_length;i++)
-				printf("%02x ",(unsigned char)event[i]);
-			printf("\n");
+			if (event_map)
+			{
+				if ((count&1))
+				{
+					for(int i=0;i<event_length;i++)
+						printf("%02x",(unsigned char)event[i]);
+					printf(":%s\n", Keys::ReverseLookup(event_map->value));
+				}
+			}
+			else 
+			{
+				for(int i=0;i<event_length;i++)
+					printf("%02x ",(unsigned char)event[i]);
+				printf("\n");
+			}
 		}
 		else
 		{

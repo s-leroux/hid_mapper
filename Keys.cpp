@@ -15,6 +15,7 @@
  * along with hid_mapper. If not, see <http://www.gnu.org/licenses/>.
  * 
  * Author: Thibault Kummer <bob@coldsource.net>
+ *         Sylvain Leroux <sylvain@chicoree.fr>
  */
 
 #include <Keys.h>
@@ -39,6 +40,18 @@ int Keys::Lookup(const char *key_name)
 			end=middle-1;
 	}while(begin<=end);
 	return -1;
+}
+
+const char* Keys::ReverseLookup(int key_int)
+{
+	// linear search...
+	for(int i = 0; i < keys_array_size; ++i)
+	{
+		if (keys_int[i] == key_int)
+			return keys_char[i];
+	}
+
+	return NULL;
 }
 
 int Keys::GetMaxKey(void)

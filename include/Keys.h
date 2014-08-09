@@ -15,6 +15,7 @@
  * along with hid_mapper. If not, see <http://www.gnu.org/licenses/>.
  * 
  * Author: Thibault Kummer <bob@coldsource.net>
+ *         Sylvain Leroux <sylvain@chicoree.fr>
  */
 
 #ifndef _KEYS_H_
@@ -24,6 +25,7 @@ class Keys
 {
 public:
 	static int Lookup(const char *key_name);
+	static const char* ReverseLookup(int key_int);
 	static int GetMaxKey(void);
 };
 
