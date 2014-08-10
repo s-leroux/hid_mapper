@@ -1,9 +1,9 @@
 This package was debianized by Sylvain Leroux <sylvain@chicoree.fr> on
-(DATE)
+Sun 10 Aug 2014
 
 It was downloaded from http://www.coldsource.net
 
- * Copyright (C) 2012  Thibault Kummer <bob@coldsource.net>
+ * Copyright (C) 2010-2011  Thibault Kummer <bob@coldsource.net>
  *               2014  Sylvain Leroux <sylvain@chicoree.fr>
  *
  * hid_mapper is free software: you can redistribute it and/or modify
