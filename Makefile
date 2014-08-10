@@ -6,7 +6,7 @@ CPPFLAGS=-Iinclude
 CFLAGS=-Iinclude
 LDFLAGS=
 EXEC=hid_mapper
-VERSION=1.0
+VERSION=2.1.0
 
 all: $(OBJS)
 	g++ $(LDFLAGS) $(OBJS) -o $(EXEC)
