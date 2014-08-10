@@ -25,6 +25,8 @@ extern "C"
 	#include <signals.h>
 }
 
+#include <log.h>
+
 #include <EventMapping.h>
 #include <MapReader.h>
 #include <MapReaderMouse.h>
@@ -68,7 +70,7 @@ int main(int argc,char **argv)
 	uid = geteuid();
 	if(uid!=0)
 	{
-		fprintf(stderr,"hid_mapper must be run as root\n");
+		error("hid_mapper must be run as root\n");
 		return EXIT_FAILURE;
 	}
 	
@@ -166,12 +168,12 @@ int main(int argc,char **argv)
 			}
 			catch(Exception e)
 			{
-				fprintf(stderr,"Error loading map file\n");
+				error("Error loading map file %s", map_filename);
 				e.Print();
 				return EXIT_FAILURE;
 			}
 			
-			fprintf(stderr,"Loaded map file %s\n",map_filename);
+			info("Loaded map file %s",map_filename);
 		}
 		
 		if(map_mouse_filename!=0)
@@ -182,12 +184,12 @@ int main(int argc,char **argv)
 			}
 			catch(Exception e)
 			{
-				fprintf(stderr,"Error loading mouse map file\n");
+				error("Error loading mouse map file %s", map_mouse_filename);
 				e.Print();
 				return EXIT_FAILURE;
 			}
 			
-			fprintf(stderr,"Loaded mouse map file %s\n",map_mouse_filename);
+			info("Loaded mouse map file %s",map_mouse_filename);
 		}
 	}
 	
@@ -210,7 +212,7 @@ int main(int argc,char **argv)
 	
 	if(re<0)
 	{
-		fprintf(stderr,"Unable to find specified HID device\n");
+		error("Unable to find specified HID device");
 		return EXIT_FAILURE;
 	}
 		
@@ -224,13 +226,13 @@ int main(int argc,char **argv)
 		
 	}
 	
-	fprintf(stderr,"Found HID device\n");
+	info("Found HID device");
 	
 	// HID
 	re = open_hid_device(&hid_device);
 	if(re<0)
 	{
-		fprintf(stderr,"Unable to open HID device\n");
+		error("Unable to open HID device");
 		return EXIT_FAILURE;
 	}
 	
@@ -240,11 +242,11 @@ int main(int argc,char **argv)
 		uinput_fd = setup_device(Keys::GetMaxKey());
 		if(uinput_fd==-1)
 		{
-			fprintf(stderr,"Unable to setup event device\n");
+			error("Unable to setup event device");
 			return EXIT_FAILURE;
 		}
 		
-		fprintf(stderr,"Generic USB mapper driver setup\n");
+		info("Generic USB mapper driver setup");
 	}
 	
 	
@@ -279,7 +281,7 @@ int main(int argc,char **argv)
 		re = read_hid_event(&hid_device,event,&event_length);
 		if(re<0)
 		{
-			fprintf(stderr,"Error reading HID event\n");
+			warn("Error reading HID event");
 			continue;
 		}
 		++count;

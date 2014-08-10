@@ -1,7 +1,7 @@
 SOURCES=main.cpp uinput_device.c hid.c signals.c keys_definition.cpp EventMapping.cpp Keys.cpp \
-        Exception.cpp MapReader.cpp MapReaderMouse.cpp
+        Exception.cpp MapReader.cpp MapReaderMouse.cpp log.cpp
 OBJS=main.o uinput_device.o hid.o signals.o keys_definition.o EventMapping.o Keys.o \
-     Exception.o MapReader.o MapReaderMouse.o
+     Exception.o MapReader.o MapReaderMouse.o log.o
 CPPFLAGS=-Iinclude
 CFLAGS=-Iinclude
 LDFLAGS=

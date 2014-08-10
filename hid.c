@@ -18,6 +18,7 @@
  */
 
 #include <hid.h>
+#include <log.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -91,7 +92,7 @@ int lookup_hid_product(int lookup_mode,const char *manufacturer,const char *prod
 			buf[re] = '\0';
 			
 			if(manufacturer==0)
-				fprintf(stderr,"Found HID device at /dev/%s\n",entry->d_name);
+				info("Found HID device at /dev/%s",entry->d_name);
 			
 			// Read vendor name
 			if(lookup_mode==LOOKUP_MODE_NAME)
@@ -201,7 +202,7 @@ int open_hid_device(struct st_hid_device *hid_device)
 			hid_device->interface_fd_max = hid_device->interface_fd[i];
 		
 		
-		fprintf(stderr,"Opened HID interface on %s\n",hid_device->interface_device[i]);
+		info("Opened HID interface on %s",hid_device->interface_device[i]);
 	}
 	
 	return 0;

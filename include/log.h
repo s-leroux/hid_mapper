@@ -14,36 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with hid_mapper. If not, see <http://www.gnu.org/licenses/>.
  * 
- * Author: Thibault Kummer <bob@coldsource.net>
+ * Author: Sylvain Leroux <sylvain@chicoree.fr>
  */
 
-#include <signals.h>
-#include <hid.h>
-#include <log.h>
-#include <uinput_device.h>
+/*** Very basic logging facility **/
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdarg.h>
 
-void sigterm_handler(int signum)
-{
-	int exit_code = 0;
-	
-	printf("Caught SIG_TERM, exiting...\n");
-	
-	// Destroy event device
-	if(uinput_fd>=0 && destroy_device(uinput_fd)<0)
-	{
-		warn("Unable to destroy event device");
-		exit_code = EXIT_FAILURE;
-	}
-	
-	// Close HID device
-	if(close_hid_device(&hid_device)<0)
-	{
-		warn("Unable to close HID device\n");
-		exit_code = EXIT_FAILURE;
-	}
-	
-	exit(exit_code);
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef enum LogLevel {
+	LOG_ERROR,
+	LOG_WARN,
+	LOG_INFO,
+} LogLevel;
+
+extern int currentLogLevel;
+
+void log(LogLevel severity, const char* fmt, va_list args);
+//void log(LogLevel severity, const char* fmt, ...);
+
+void info(const char* fmt, ...);
+void warn(const char* fmt, ...);
+void error(const char* fmt, ...);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
