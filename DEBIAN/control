@@ -1,0 +1,10 @@
+Package: hid-mapper
+Version: 2.0.1
+Section: base
+Priority: optional
+Architecture: all
+Depends: coreutils (>= 5.0-5)
+Maintainer: Sylvain Leroux <sylvain@chicoree.fr>
+Description: HID event mapper
+ Developped to map USB HID IR remote to keyboard events.
+ Should work with any USB HID device.
