@@ -1,3 +1,4 @@
 if [ -x "/etc/init.d/hid-mapper" ]; then
-	invoke-rc.d hid-mapper stop || exit $?
+	invoke-rc.d hid-mapper stop || echo Failed to stop. Continuing
+#	invoke-rc.d hid-mapper stop || exit $?
 fi

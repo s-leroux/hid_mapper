@@ -14,9 +14,9 @@
 
 DAEMON="/usr/bin/hid_mapper"
 
-if [ -f "/etc/default/hid_mapper" ]
+if [ -f "/etc/default/hid-mapper" ]
 then
-	. "/etc/default/hid_mapper"
+	. "/etc/default/hid-mapper"
 fi
 
 # script name
@@ -29,7 +29,7 @@ DESC=HID_MAPPER
 RUN_AS=root
 
 # Path of the PID file
-PID_FILE=/var/run/hid_mapper.pid
+PID_FILE=/var/run/hid-mapper.pid
 
 ############### END EDIT ME ##################
 
