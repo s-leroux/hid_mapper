@@ -14,7 +14,10 @@
 
 DAEMON="/usr/bin/hid_mapper"
 
-. "/etc/default/hid_mapper"
+if [ -f "/etc/default/hid_mapper" ]
+then
+	. "/etc/default/hid_mapper"
+fi
 
 # script name
 NAME=hid_mapper

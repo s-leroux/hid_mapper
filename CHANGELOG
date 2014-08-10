@@ -1,0 +1,31 @@
+hid-mapper (1.0) RELASED; urgency=low
+
+  * Initial release
+
+ -- Thibault Kummer <bob@coldsource.net>  Sat, 25 Dec 2010 13:43:00 +0000
+
+hid-mapper (1.0.5) RELASED; urgency=low
+
+  * Various bug fixes and improvments
+
+ -- Thibault Kummer <bob@coldsource.net>  Sun, 3 Apr 2011 15:06:00 +0000
+
+hid-mapper (2.0.0) UNRELEASED; urgency=low
+
+  * Moved to github
+
+ -- Sylvain Leroux <sylvain@chicoree.fr>  Sat, 9 Aug 2014 18:05:33 +0200
+
+
+hid-mapper (2.1.0) UNRELEASED; urgency=low
+
+  * Add interractive learn mode
+
+ -- Sylvain Leroux <sylvain@chicoree.fr>  Sun, 10 Aug 2014 01:10:57 +0200
+
+
+hid-mapper (2.1.1) UNRELEASED; urgency=low
+
+  * Debianized package.
+
+ -- Sylvain Leroux <sylvain@chicoree.fr>  Sun, 10 Aug 2014 18:05:33 +0200

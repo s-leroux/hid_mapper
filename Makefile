@@ -18,13 +18,22 @@
 #         Sylvain Leroux <sylvain@chicoree.fr>
 # 
 
+#
+# On Debian systems, load the required/strongly suggested build options
+#
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all,+fortify
+DPKG_EXPORT_BUILDFLAGS = 1
+-include /usr/share/dpkg/buildflags.mk
+
+CPPFLAGS+=-Iinclude -fPIC
+CFLAGS+=-Iinclude -fPIC
+LDFLAGS+=
+
 SOURCES=main.cpp uinput_device.c hid.c signals.c keys_definition.cpp EventMapping.cpp Keys.cpp \
         Exception.cpp MapReader.cpp MapReaderMouse.cpp log.cpp
 OBJS=main.o uinput_device.o hid.o signals.o keys_definition.o EventMapping.o Keys.o \
      Exception.o MapReader.o MapReaderMouse.o log.o
-CPPFLAGS=-Iinclude
-CFLAGS=-Iinclude
-LDFLAGS=
+
 EXEC=hid_mapper
 VERSION=2.1.0
 
@@ -40,16 +49,21 @@ all: $(OBJS)
 deb: all
 	rm -rf package/
 	mkdir package/
-	cp -r DEBIAN/ package/DEBIAN/
+	mkdir package/DEBIAN
+	cp -r debian/conffiles debian/control package/DEBIAN/
+	install debian/postinst debian/prerm debian/postrm package/DEBIAN/
 
-	install -D scripts/hid_mapper.rc-d package/etc/init.d/hid_mapper
-	install -D scripts/hid_mapper.default package/etc/default/hid_mapper
-	install -D $(EXEC) package/usr/bin/$(EXEC)
+	install -D debian/hid-mapper.init package/etc/init.d/hid-mapper
+	install -D --mode=644 debian/hid-mapper.default package/etc/default/hid-mapper
+	install -D --mode=644 COPYRIGHT package/usr/share/doc/hid-mapper/copyright
+	install -D --mode=644 CHANGELOG package/usr/share/doc/hid-mapper/changelog
+	gzip --best package/usr/share/doc/hid-mapper/changelog
+	install -D --strip $(EXEC) package/usr/bin/$(EXEC)
 	
 	mkdir -p package/usr/share/hid-mapper/
 	cp -dr --no-preserve=ownership maps package/usr/share/hid-mapper/
 
-	dpkg-deb --build package hid-mapper-$(VERSION)-amd64.deb
+	fakeroot dpkg-deb --build package hid-mapper-$(VERSION)-amd64.deb
 
 clean:
 	rm -f *.o

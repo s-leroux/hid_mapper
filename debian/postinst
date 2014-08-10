@@ -1,0 +1,4 @@
+if [ -x "/etc/init.d/hid-mapper" ]; then
+	update-rc.d hid-mapper defaults >/dev/null
+	invoke-rc.d hid-mapper start || exit $?
+fi
