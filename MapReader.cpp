@@ -22,6 +22,7 @@
 #include <Keys.h>
 #include <Exception.h>
 #include <config.h>
+#include <log.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -48,6 +49,7 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 	
 	try
 	{
+		info("Loading %s\n",filename);
 		f = fopen(filename,"r");
 		if(!f)
 			throw Exception("MapReader","Unable to open map file");

@@ -212,7 +212,7 @@ int main(int argc,char **argv)
 	
 	if(re<0)
 	{
-		error("Unable to find specified HID device");
+		error("Unable to find specified HID device (%s; %s)", manufacturer,product);
 		return EXIT_FAILURE;
 	}
 		
