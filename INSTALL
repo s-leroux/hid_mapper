@@ -1,15 +1,19 @@
 Basic building:
 ===============
 
-Build hid_mapper in the source directory:
+Go to the source directory then type from your shell:
 
     ./make
+    sudo make install
 
 This will build the `hid_mapper` binary file in
-the current directory.
-.
-This will not install anything system wide.
-(one day, they will be a `make install`)
+the current directory and install the various
+files:
+
+ - `hid_mapper` will go into `/usr/bin`
+ - startup script will go into `/etc/init.d`
+ - default config will go into `/etc/default`
+ - maps will go into `/usr/share/hid-mapper/map`
 
 Debian (binary) package:
 ========================

@@ -36,6 +36,7 @@ OBJS=main.o uinput_device.o hid.o signals.o keys_definition.o EventMapping.o Key
 
 EXEC=hid_mapper
 VERSION=2.1.0
+PREFIX=/
 
 all: $(OBJS)
 	g++ $(LDFLAGS) $(OBJS) -o $(EXEC)
@@ -53,20 +54,23 @@ deb: all
 	cp -r debian/conffiles debian/control package/DEBIAN/
 	install debian/postinst debian/prerm debian/postrm package/DEBIAN/
 
-	install -D debian/hid-mapper.init package/etc/init.d/hid-mapper
-	install -D --mode=644 debian/hid-mapper.default package/etc/default/hid-mapper
-	install -D --mode=644 COPYRIGHT package/usr/share/doc/hid-mapper/copyright
-	install -D --mode=644 CHANGELOG package/usr/share/doc/hid-mapper/changelog
-	gzip --best package/usr/share/doc/hid-mapper/changelog
-	install -D --strip $(EXEC) package/usr/bin/$(EXEC)
-	
-	mkdir -p package/usr/share/hid-mapper/
-	cp -dr --no-preserve=ownership maps package/usr/share/hid-mapper/
+	make PREFIX=package install
 
 	fakeroot dpkg-deb --build package hid-mapper-$(VERSION)-amd64.deb
 
+install:
+	install -D debian/hid-mapper.init $(PREFIX)/etc/init.d/hid-mapper
+	install -D --mode=644 debian/hid-mapper.default $(PREFIX)/etc/default/hid-mapper
+	install -D --mode=644 COPYRIGHT $(PREFIX)/usr/share/doc/hid-mapper/copyright
+	install -D --mode=644 CHANGELOG $(PREFIX)/usr/share/doc/hid-mapper/changelog
+	gzip --best $(PREFIX)/usr/share/doc/hid-mapper/changelog
+	install -D --strip $(EXEC) $(PREFIX)/usr/bin/$(EXEC)
+	
+	mkdir -p $(PREFIX)/usr/share/hid-mapper/
+	cp -dr --no-preserve=ownership maps $(PREFIX)/usr/share/hid-mapper/
+
 clean:
-	rm -f *.o
+	rm -f *.o *.deb
 	rm -f $(EXEC)
 	rm -rf package/
 
