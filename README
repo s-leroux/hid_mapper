@@ -1,4 +1,22 @@
+USB HID devices communicates with the host computer by sending
+binary reports. Unfortunately, some devices do not provide enough
+information for the Linux `hiddev` driver to parse those reports.
+
+In order to communicate with those devices, `hid_mapper` use the
+low level `hidraw` driver as well as a user provided map file to
+translate "raw reports" to keys.
+
+`hid_mapper` was specifically designed in order to use
+"non-compliant" USB HID IR remote receiver with XBMC, but should work
+with any USB HID device and for any other application.
+
 This README is based on http://forum.xbmc.org/showthread.php?tid=88560
+
+    This software is  distributed in the hope  that it will
+    be useful,  but WITHOUT ANY WARRANTY;  without even the
+    implied warranty  of MERCHANTABILITY  or FITNESS  FOR A
+    PARTICULAR  PURPOSE.  See  the LICENSE  file  for  more
+    details.
 
 Build hid_mapper:
 =================
@@ -6,14 +24,16 @@ Build hid_mapper:
     cd /path/to/hid_mapper
     ./make
 
+(see `INSTALL` for other build options)
+
 List recognized devices:
 ========================
 
     ./hid_mapper --list-devices
 
-If necessary, blacklist the device in Xorg so it does not conflict with the 
-mapper. Create a new file in /usr/share/X11/xorg.conf.d/. For example
-`50-remote.conf` containing:
+If necessary, blacklist the device in Xorg so it does not conflict
+with the mapper. Create a new file in /usr/share/X11/xorg.conf.d/.
+For example `50-remote.conf` containing:
 
     Section "InputClass"
     Identifier "Remote blacklist"
@@ -37,12 +57,12 @@ produce:
     01 00 00 28 00 00 00 00 00
     01 00 00 00 00 00 00 00 00
 
-The first event (line `01 00 00 28 00 00 00 00 00`) is the _key down_ event
-corresponding to the pressed button.
+The first event (line `01 00 00 28 00 00 00 00 00`) is the _key down_
+event corresponding to the pressed button.
 
-Based on the info gathered by pressing the various buttons of your remote, and
-using keys defined in `/usr/include/linux/input.h`, write (yourself!) a
-map file consisting of <key code>:<key symbol> pairs:
+Based on the info gathered by pressing the various buttons of your
+remote, and using keys defined in `/usr/include/linux/input.h`, write
+(yourself!) a map file consisting of <key code>:<key symbol> pairs:
 
     010000280000000000:KEY_ENTER
     030000000000020000:KEY_KP1
@@ -60,9 +80,10 @@ to first collect the HID event (`--learn`) and then write the
 corresponding map.
 
 If you want to do that in "one pass", you might use the new learn+map
-feature. This will require first an "empty" map containing all the keys
-you want to learn. In that map, keys to "learn" must have the value `00`
-as HID event hexdump, like in that example (from `maps/xbmc-base.map`):
+feature. This will require first an "empty" map containing all the
+keys you want to learn. In that map, keys to "learn" must have
+the value `00` as HID event hexdump, like in that example (from
+`maps/xbmc-base.map`):
 
     00:KEY_RECORD
     00:KEY_PAUSE
@@ -74,8 +95,8 @@ as HID event hexdump, like in that example (from `maps/xbmc-base.map`):
     00:KEY_RIGHTSHIFT
 
 When fed with such a map with both `--learn` and `--map` options set,
-`hid_mapper` will ask you to press each key in its turn, producing
-a valid key map on standard output:
+`hid_mapper` will ask you to press each key in its turn, producing a
+valid key map on standard output:
 
     ./hid_mapper --learn \
                  --manufacturer 'PHILIPS' \
@@ -89,9 +110,9 @@ a valid key map on standard output:
     #                        accustomed to shell redirections it might
     #                        be a good time to learn)
 
-Depending your needs/your HID device/your software you might have to 
-manually tweak the output map (i.e.: on XBMC Eden, I had to rename 
-some keys afterward: KEY_INFO -> KEY_I, and so on), but it is usually 
+Depending your needs/your HID device/your software you might have to
+manually tweak the output map (i.e.: on XBMC Eden, I had to rename
+some keys afterward: KEY_INFO -> KEY_I, and so on), but it is usually
 a very good starting point.
 
 Run the mapper:
@@ -104,10 +125,10 @@ The final step is to actually run the mapper:
                  --product 'MCE USB IR Receiver- Spinel plusf0r ASUS' \
                  --map 'maps/asus-spinel.map'
 
-At this point the remote should work and emit the keys specified in the map 
-file.
+At this point the remote should work and emit the keys specified in
+the map file.
 
-Since the hidraw driver is generic, this mapper should work with any HID 
-receiver, even if it is not a remote. HID is used for keyboard, mouses, 
-joysticks...
+Since the hidraw driver is generic, this mapper should work with any
+HID receiver, even if it is not a remote. HID is used for keyboard,
+mouses, joysticks...
 
