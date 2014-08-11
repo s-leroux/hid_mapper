@@ -1,0 +1,55 @@
+#
+#   XBMC base map
+#
+#   Use that map with the new learn+map mode
+#   to quickly produce a basic map for XBMC
+#   corresponding to your remote
+#   
+#       ./hid_mapper --learn \
+#                    --manufacturer 'MY-MANUFACTURER-NAME' \
+#                    --product 'MY-PRODUCT-NAME' \
+#                    --map maps/xbmc-base.map > my-new-map.map
+#
+#
+00:KEY_RECORD
+00:KEY_PAUSE
+00:KEY_STOP
+00:KEY_REWIND
+00:KEY_PLAY
+00:KEY_FORWARD
+00:KEY_LEFTSHIFT
+00:KEY_RIGHTSHIFT
+00:KEY_BACK
+00:KEY_INFO
+00:KEY_MENU
+00:KEY_UP
+00:KEY_LEFT
+00:KEY_RIGHT
+00:KEY_DOWN
+00:KEY_OK
+00:KEY_VOLUMEUP
+00:KEY_VOLUMEDOWN
+00:KEY_MUTE
+00:KEY_CHANNELUP
+00:KEY_CHANNELDOWN
+00:KEY_0
+00:KEY_1
+00:KEY_2
+00:KEY_3
+00:KEY_4
+00:KEY_5
+00:KEY_6
+00:KEY_7
+00:KEY_8
+00:KEY_9
+00:KEY_RED
+00:KEY_GREEN
+00:KEY_YELLOW
+00:KEY_BLUE
+00:KEY_NUMERIC_STAR
+00:KEY_NUMERIC_POUND
+00:KEY_TEXT
+00:KEY_TITLE
+00:KEY_CLEAR
+00:KEY_WAKEUP
+00:KEY_SLEEP

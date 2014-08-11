@@ -21,8 +21,8 @@ mapper. Create a new file in /usr/share/X11/xorg.conf.d/. For example
     Option "Ignore" "on"
     EndSection
 
-Capture HID events:
-===================
+Capture HID events (traditional way):
+=====================================
 
     ./hid_mapper --learn \
                  --manufacturer 'PHILIPS' \
@@ -51,6 +51,48 @@ map file consisting of <key code>:<key symbol> pairs:
     030000000000008000:KEY_TAB
 
 (see the maps/ directory for user contributed examples)
+
+Capture HID events (learn+map way):
+===================================
+
+It is somehow annoying (well, error prone ... well, no, annoying)
+to first collect the HID event (`--learn`) and then write the
+corresponding map.
+
+If you want to do that in "one pass", you might use the new learn+map
+feature. This will require first an "empty" map containing all the keys
+you want to learn. In that map, keys to "learn" must have the value `00`
+as HID event hexdump, like in that example (from `maps/xbmc-base.map`):
+
+    00:KEY_RECORD
+    00:KEY_PAUSE
+    00:KEY_STOP
+    00:KEY_REWIND
+    00:KEY_PLAY
+    00:KEY_FORWARD
+    00:KEY_LEFTSHIFT
+    00:KEY_RIGHTSHIFT
+
+When fed with such a map with both `--learn` and `--map` options set,
+`hid_mapper` will ask you to press each key in its turn, producing
+a valid key map on standard output:
+
+    ./hid_mapper --learn \
+                 --manufacturer 'PHILIPS' \
+                 --product 'MCE USB IR Receiver- Spinel plusf0r ASUS' \
+                 --map maps/xbmc-base.map > maps/asus-spinnel.map
+    #                                     ^^^^^^^^^^^^^^^^^^^^^^^
+    #                        This redirection will send the command
+    #                        output directly to the given file
+    #                        Note: old content is lost!
+    #                        (use `>>` to append -- if you are not
+    #                        accustomed to shell redirections it might
+    #                        be a good time to learn)
+
+Depending your needs/your HID device/your software you might have to 
+manually tweak the output map (i.e.: on XBMC Eden, I had to rename 
+some keys afterward: KEY_INFO -> KEY_I, and so on), but it is usually 
+a very good starting point.
 
 Run the mapper:
 ===============

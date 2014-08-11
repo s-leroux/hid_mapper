@@ -1,5 +1,40 @@
+Basic building:
+===============
+
 Build hid_mapper in the source directory:
 
     ./make
 
-See REAME for usage
+This will build the `hid_mapper` binary file in
+the current directory.
+.
+This will not install anything system wide.
+(one day, they will be a `make install`)
+
+Debian (binary) package:
+========================
+
+Go to the source directory then type from your shell:
+
+    ./make deb
+
+This will produce a binary Debian package in the current
+directory. This package may be then installed using `dpkg -i`:
+
+    dpkg -i hid-mapper-2.1.0-amd64.deb
+
+The binary will be installed into `/usr/bin`
+The maps in `/usr/share/hid-mapper/maps`
+The startup script in `/etc/init.d`...
+
+... and the configuration file in `/etc/default/hid-mapper`
+(set your `product`, `manufacturer` and `map` in that later file).
+
+To start/stop/restart the daemon, do as usual:
+
+    /etc/init.d/hid-mapper {start|stop|restart}
+
+Or:
+
+    invoke-rc.d hid-mapper {start|stop|restart}
+
