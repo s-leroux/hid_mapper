@@ -33,8 +33,8 @@ typedef enum LogLevel {
 
 extern int currentLogLevel;
 
-void log(LogLevel severity, const char* fmt, va_list args);
-//void log(LogLevel severity, const char* fmt, ...);
+void logmsg(LogLevel severity, const char* fmt, va_list args);
+//void logmsg(LogLevel severity, const char* fmt, ...);
 
 void info(const char* fmt, ...);
 void warn(const char* fmt, ...);
