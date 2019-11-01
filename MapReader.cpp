@@ -105,8 +105,10 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 			
 			i = 0;
 
-			while(i<KEY_NAME_MAXLENGTH && ptr[i]!='\0' && ptr[i]!='\n' && (!isspace(ptr[i])))
-				key_name[i] = ptr[i++];
+			while(i<KEY_NAME_MAXLENGTH && ptr[i]!='\0' && ptr[i]!='\n' && (!isspace(ptr[i]))) {
+				key_name[i] = ptr[i];
+				i++;
+			}
 			
 			if(i==KEY_NAME_MAXLENGTH)
 			{
@@ -150,7 +152,7 @@ void MapReader::LoadMap(const char *filename,EventMapping *map)
 				key = Keys::Lookup(key_name);
 				if(key<0)
 				{
-					sprintf(error,"Unknown key name at line %d",line);
+					sprintf(error,"Unknown key name [%s] at line %d", key_name, line);
 					throw Exception("MapReader",error);
 				}
 			}
