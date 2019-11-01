@@ -28,18 +28,18 @@ const char* headers[] = {
 	"ERRO",
 };
 
-void log(LogLevel severity, const char* fmt, va_list args) {
+void logmsg(LogLevel severity, const char* fmt, va_list args) {
 	if (severity < currentLogLevel) {
 		vfprintf(stderr, fmt, args);
 		putc('\n', stderr);
 	}
 }
 
-void log(LogLevel severity, const char* fmt, ...)
+void logmsg(LogLevel severity, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	log(severity, fmt, args);
+	logmsg(severity, fmt, args);
 	va_end(args);
 
 }
@@ -48,7 +48,7 @@ void info(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	log(LOG_INFO, fmt, args);
+	logmsg(LOG_INFO, fmt, args);
 	va_end(args);
 }
 
@@ -56,7 +56,7 @@ void warn(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	log(LOG_WARN, fmt, args);
+	logmsg(LOG_WARN, fmt, args);
 	va_end(args);
 }
 
@@ -64,7 +64,7 @@ void error(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	log(LOG_ERROR, fmt, args);
+	logmsg(LOG_ERROR, fmt, args);
 	va_end(args);
 }
 
