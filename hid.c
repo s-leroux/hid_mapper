@@ -17,12 +17,14 @@
  * Author: Thibault Kummer <bob@coldsource.net>
  */
 
+#include <sys/select.h>
 #include <hid.h>
 #include <log.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <string.h>
 
 #define SYSFS_HIDRAW_CLASS_PATH "/sys/class/hidraw"
 
