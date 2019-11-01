@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <string.h>
 
 #define SYSFS_HIDRAW_CLASS_PATH "/sys/class/hidraw"
 
