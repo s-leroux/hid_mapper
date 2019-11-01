@@ -17,6 +17,7 @@
  * Author: Thibault Kummer <bob@coldsource.net>
  */
 
+#include <sys/select.h>
 #include <hid.h>
 #include <log.h>
 #include <fcntl.h>
